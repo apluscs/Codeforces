@@ -29,3 +29,8 @@ Procedure:
 2. For loops are ~O(NlogN); each lca(u, v) is O(logN); depths are memoized so O(1)
 
 Whole program is O(N(logN)^2).
+
+Lessons learned from this problem:
+- Now you know the logN way of finding the LCA of two nodes.
+- Always watch for integer overflow, may have to use long long's.
+- Stack overflow can happen with too many calls of DFS. If this is even possible, use BFS.
