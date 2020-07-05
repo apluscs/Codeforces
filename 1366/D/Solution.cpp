@@ -53,7 +53,7 @@ struct Solution {
     iota(minDiv.begin(), minDiv.end(), 0);  // initial starts off as value
     for (int i = 2; i != minDiv.size(); ++i) {
       if (minDiv[i] != i) continue;  // not prime
-      for (int j = i * i; j < minDiv.size(); j += i) {
+      for (ll j = (ll)i * i; j < minDiv.size(); j += i) {
         minDiv[j] = min(i, minDiv[j]);
       }
     }
@@ -64,7 +64,6 @@ int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
   cin >> n;
-  nums.clear();
   nums.resize(n);
   for (int i = 0; i != n; ++i) cin >> nums[i];
   Solution test;
