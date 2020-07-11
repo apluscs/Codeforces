@@ -17,33 +17,34 @@ vector<int> a, b;
 
 struct Solution {
   string solve() {
-    vector<int> gave(n, 0);
-    vector<int> x(n, 0);
-    for (int i = 0; i < n; i++) {
-      int give = max(0, min(b[i], a[i] - x[i]));
-      x[i] += give;
-      b[i] -= give;
-      gave[i] = give;
+    vector<int> right(n, 0);
+    vector<int> x(n, 0);  // x[i] = what Pi took
+    for (int i = 0; i != n; ++i) {
+      // min(what RHS offers, what you need from them)
+      int took_right = max(0, min(b[i], a[i] - x[i]));
+      x[i] += took_right;
+      b[i] -= took_right;
+      right[i] = took_right;
+      // what remains from RHS is now right neighbor's LHS supply
       x[(i + 1) % n] += b[i];
     }
-    print(x);
-    print(gave);
-    for (int i = 0; i < n; i++) {
-      int toShift = max(0, min(gave[i], x[i] - a[i]));
-      x[i] -= toShift;
-      x[(i + 1) % n] += toShift;
-    }
-    print(x);
+    // now P0 has everything they need from its RHS and what P(N-1) had left
+    // over from his RHS. P0 has too much! Need to adjust by reeling in some of
+    // what he took from his RHS, and giving it back to his right neighbor.
 
-    bool ok = true;
-    for (int i = 0; i < n; i++) {
-      if (x[i] < a[i]) {
-        ok = false;
-        break;
-      }
+    for (int i = 0; i != n; ++i) {
+      // min(capacity of what you can give back to right neighbor,
+      //     how much you can afford to give back (your surplus, if any) )
+      int give_right = max(0, min(right[i], x[i] - a[i]));
+      x[i] -= give_right;
+      x[(i + 1) % n] += give_right;
     }
 
-    return ok ? "YES" : "NO";
+    for (int i = 0; i != n; ++i) {
+      if (x[i] < a[i]) return "NO";
+    }
+
+    return "YES";
   }
 
   void print(vector<int>& v) {
