@@ -1,0 +1,16 @@
+
+3
+a*a
+2
+aaa
+aba
+5
+lo*er
+2
+lover
+loser
+4
+a**d
+2
+abcd
+acbd
