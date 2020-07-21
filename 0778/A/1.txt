@@ -1,0 +1,7 @@
+bbbabb
+bb
+1 6 3 4 2 5
+
+ababcba
+abb
+5 3 4 1 7 6 2
