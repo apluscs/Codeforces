@@ -10,11 +10,10 @@ If no suffix of A that matches the prefix of A, then no solution.
 
 But if there is a prefix of A that is also a suffix of A (call this substring B = C = D), then that is the solution. We can easily check this because the prefix of A is also the prefix of S (the given string). How is this a guaranteed solution? We can say B is what Prefix uses, C is what Obelix uses, and since C is also a suffix of S, D is what Suffix uses.
 
-`
-|------------S------------|\
+
+|------------S------------|
          |--------A-------|\
 |--------A-------|\
 |-----B-----|\
     |------C-----|\
              |------D-----|
-`
