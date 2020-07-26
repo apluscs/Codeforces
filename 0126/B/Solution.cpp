@@ -18,13 +18,37 @@ const int mod = 1e9 + 7;
 
 string s;
 struct Solution {
-  void solve() { auto f = get_failure(s); }
-
-  vector<int> get_failure(string str) {
-    vector<int> res(str.length());
-    for (int i = 0, j = 0; i != n; ++i) {
-      while (j != 0 && s[j] != s[i]) j = res[j]
+  void solve() {
+    int n = s.length();
+    auto f = get_failure(s);
+    auto last = f.begin() + n - 1;
+    int b = f.back();
+    if (!b) {
+      cout << "Just a legend" << endl;
+      return;
     }
+    if (find(f.begin(), last, b) != last) {
+      cout << s.substr(0, b) << endl;
+      return;
+    }
+    if (f[b - 1]) {
+      cout << s.substr(0, f[b - 1]) << endl;
+      return;
+    }
+    cout << "Just a legend" << endl;
+    return;
+  }
+
+  vector<int> get_failure(string &str) {
+    int m = str.length();
+    vector<int> res(m);
+    for (int i = 1, j = 0; i != m; ++i) {
+      while (j != 0 && str[j] != str[i])
+        j = res[j - 1];
+      if (str[i] == str[j])
+        res[i] = ++j;
+    }
+    return res;
   }
 };
 
