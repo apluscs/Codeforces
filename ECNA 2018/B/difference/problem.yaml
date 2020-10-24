@@ -1,0 +1,10 @@
+# Problem configuration
+source: 2018 ICPC East-Central NA Regional Contest
+author: John Bonomo
+license: cc0
+rights_owner: ECNA
+name: Difference
+
+limits:
+   time_multiplier: 3
+

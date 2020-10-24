@@ -1,0 +1,10 @@
+# Problem configuration
+source: 2018 ICPC East-Central NA Regional Contest
+author: Deon Nicholas
+license: cc0
+rights_owner: ECNA
+name: Pear-wise Voting
+
+limits:
+   time_multiplier: 3
+

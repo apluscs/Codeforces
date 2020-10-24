@@ -1,0 +1,26 @@
+vector<int> topo_sort() {
+  vector<int> res, indegree(n); // n = #nodes
+  queue<int> que;
+  for (int i = 0; i < n; i++) {
+    for (int j : adj[i]) {  // adj[i] = all nodes i goes to
+      indegree[j]++;
+    }
+  }
+  for (int i = 0; i < n; i++)
+    if (indegree[i] == 0)
+      que.push(i);
+  while (!que.empty()) {
+    int curr = que.front();
+    que.pop();
+    res.push_back(curr);
+    for (int j : adj[curr]) {
+      indegree[j]--;
+      if (indegree[j] == 0) {
+        que.push(j);
+      }
+    }
+  }
+  return res;
+}
+
+// Note: res will have size < n if there is a cycle (at least one group of nodes each whose indegree will never == 0)
