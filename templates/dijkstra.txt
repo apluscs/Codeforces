@@ -1,0 +1,22 @@
+vector<ll> solve() {
+  vector<ll> res(n + 1, LLONG_MAX);  // distances,
+  vector<bool> vis(n + 1);           // if processed or not
+  res[n] = 0;                        // the source
+  priority_queue<pair<ll, int>, vector<pair<ll, int>>, compar> pq;
+  pq.push(mp(0, n));
+  while (!pq.empty()) {
+    auto p = pq.top();
+    pq.pop();
+    int curr = p.second;  // the index
+    if (vis[curr]) continue;
+    vis[curr] = true;
+    for (auto e : adj[curr]) {
+      int j = edges[e][0] + edges[e][1] - curr;  // the other index
+      ll new_dist = res[curr] + edges[e][2];
+      if (vis[j] || new_dist >= res[j]) continue;
+      pq.push(mp(new_dist, j));
+      res[j] = new_dist;
+    }
+  }
+  return res;
+}
