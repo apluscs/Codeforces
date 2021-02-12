@@ -2,6 +2,11 @@
   "files.associations": {
     "iostream": "cpp",
     "random": "cpp",
-    "ostream": "cpp"
+    "ostream": "cpp",
+    "climits": "cpp",
+    "unordered_map": "cpp",
+    "string_view": "cpp",
+    "regex": "cpp",
+    "functional": "cpp"
   }
 }
