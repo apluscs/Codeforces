@@ -30,11 +30,55 @@ using namespace std;
 const int mod = 1e9 + 7;
 
 int n, m;
+struct Offer {
+  int x, y;
+  ll val;
+  Offer() {}
+  Offer(int x, int y, ll val) : x(x), y(y), val(val) {}
+  bool operator<(const Offer& b) const {
+    return val < b.val;
+  }
+  bool operator==(const Offer& b) const {
+    return val == b.val && x == b.x && y == b.y;
+  }
+  void print() {
+    printf("x=%d, y=%d, val=%lld\n", x, y, val);
+  }
+};
+vector<Offer> offers;
 vector<ll> nums;
-vector<vector<pair<int, ll>>> adj;
 struct Solution {
-  int solve() {
-    
+  vector<int> reps;
+  ll solve() {
+    auto it = min_element(nums.begin(), nums.end());
+    int low = it - nums.begin();
+    reps.resize(n, -1);
+    for (int i = 0; i != n; ++i) {
+      if (i == low) continue;
+      offers.push_back(Offer(low, i, nums[low] + nums[i]));
+    }
+    sort(offers.begin(), offers.end());
+    ll res = 0;
+    for (auto& e : offers) {
+      if (set_union(e.x, e.y)) res += e.val;
+    }
+    return res;
+  }
+  int find(int a) {
+    if (reps[a] != -1) {
+      return reps[a] = find(reps[a]);  // with path compression;
+    }
+    return a;
+  }
+
+  // normal union find
+  bool set_union(int a, int b) {
+    int pa = find(a), pb = find(b);
+    if (pa != pb) {
+      reps[pa] = pb;
+      return true;
+    }
+    return false;
   }
 };
 
@@ -42,8 +86,7 @@ int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
   cin >> n >> m;
-  adj.clear();
-  adj.resize(n);
+  offers.resize(m);
   nums.resize(n);
   REP(i, n) {
     cin >> nums[i];
@@ -53,8 +96,7 @@ int main() {
   REP(i, m) {
     cin >> x >> y >> w;
     x--, y--;
-    adj[x].pb(mp(y,w));
-    adj[y].pb(mp(x,w));
+    offers[i] = Offer(x, y, w);
   }
   Solution test;
   auto res = test.solve();
