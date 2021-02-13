@@ -200,18 +200,19 @@ for (int len = 1; len != n; ++len) {
 
 
 void set_union(int pa, int pb) {  // with rank
-  if (rank[pa] >= rank[pb]) {
-    rank[pa] += rank[pa] == rank[pb] ? 1 : 0;
+  if (pa == pb)
+    return;
+  if (rank[pa] == rank[pb])
+    rank[pa]++; // tie-broke guaranteed
+  if (rank[pa] > rank[pb])
     reps[pb] = pa;
-  } else {
+  else
     reps[pa] = pb;
-  }
 }
 
 int find(int a) {
   if (reps[a] != -1){
-    reps[a] = find(reps[a]);  // with path compression
-    return reps[a];
+    return reps[a] = find(reps[a]);  // with path compression;
   }
   return a;
 }
@@ -268,6 +269,20 @@ long factorial(int n) {
     }
     return res;
   }
+  
+  /*
+  Needle:
+    abaabab
+    0011232   // failure table
+          ^___j
+  Haystack:
+      abaabaX**** // mismatch occurred at i
+            ^________i
+  Needle will readjust to: j = 3
+      abaabab
+      0011232   // failure table
+         ^___j
+  */     
   
   void print(vector<int>& nums){
     for(auto num:nums)cout<<num<<" ";cout<<endl;
