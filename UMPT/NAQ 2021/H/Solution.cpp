@@ -35,7 +35,7 @@ int n, m, K;
 string key;
 vector<string> grid;
 struct Solution {
-  int dp[100][100][50];
+  int dp[100][100][51];
   int solve() {
     memset(dp, -1, sizeof(dp));
     // print(grid);

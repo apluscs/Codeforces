@@ -28,35 +28,40 @@
 
 using namespace std;
 
-int n, m;
-ll curr;
-vector<int> nums;
+int n;
+string s;
 struct Solution {
   int solve() {
-    sort(nums.begin(), nums.end());
-    int i;
-    for (i = n - 1; curr > 0 && i != -1; --i) {
-      curr -= nums[i];
-      // cout << curr << endl;
+    int frq[10] = {0}, m = s.length(), res = m;
+    for (char c : s) frq[c - '0']++;
+    for (int f : frq) res = min(res, m - f);  // how many to remove to get unanimous?
+    REP(i, 10)
+    REP(j, 10) {
+      if (i == j) continue;
+      res = min(res, m - evens(i + '0', j + '0'));
     }
-    if (curr > 0) return -1;
-    return n - i - 1;
+    return res;
+  }
+  int evens(char a, char b) {  // max length subsequence where a = even index, b = odd index
+    int res = 0;               // a is the next one
+    for (char c : s) {
+      if (c == a) res++, swap(a, b);  // now b is next one
+    }
+    res -= res % 2;
+    // printf("a=%c, b=%c, res=%d\n", a, b, res);
+    return res;
   }
 };
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
-  cin >> n >> m;
-  curr = -m;
-  nums.resize(n);
-  REP(i, n) {
-    int a, b;
-    cin >> a >> b;
-    curr += a;        // curr = inital overflow
-    nums[i] = a - b;  // how much storage will drop
-  }
+  int T;
+  cin >> T;
   Solution test;
-  auto res = test.solve();
-  cout << res << endl;
+  while (T--) {
+    cin >> s;
+    auto res = test.solve();
+    cout << res << endl;
+  }
 }

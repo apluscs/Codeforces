@@ -29,37 +29,26 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-int n;
-vector<int> nums;
+int n, a, b, c;
 struct Solution {
-  vector<string> solve() {
-    vector<bool> dp(101);
-    dp[0] = dp[3] = dp[7] = true;
-    for (int i = 4; i != 101; ++i) {
-      dp[i] = dp[i] || dp[i - 3] || (i >= 7 && dp[i - 7]);
-      // if (dp[i]) printf("i=%d ", i);
+  int solve() {
+    vector<int> dp(n + 1, -1);  // -1 means unpartionable
+    dp[0] = 0;
+    for (int i = 1; i <= n; ++i) {
+      if (i >= a && dp[i - a] != -1) dp[i] = 1 + dp[i - a];
+      if (i >= b && dp[i - b] != -1) dp[i] = max(dp[i], 1 + dp[i - b]);
+      if (i >= c && dp[i - c] != -1) dp[i] = max(dp[i], 1 + dp[i - c]);
+      // printf("i=%d, res=%d\n", i, dp[i]);
     }
-    vector<string> res;
-    // cout << dp[6] << endl;
-    for (int num : nums) {
-      res.push_back(dp[num] ? "YES" : "NO");
-      // if (dp[num] || true) printf("i=%d ", num);
-    }
-    return res;
+    return dp[n];
   }
 };
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
-  cin >> n;
-  nums.resize(n);
-  REP(i, n) {
-    cin >> nums[i];
-  }
+  cin >> n >> a >> b >> c;
   Solution test;
   auto res = test.solve();
-  for (auto r : res) {
-    cout << r << endl;
-  }
+  cout << res << endl;
 }

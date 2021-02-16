@@ -1,10 +1,13 @@
 #include <assert.h>
 #include <math.h>
+#include <stdio.h>
+#include <string.h>
 
 #include <algorithm>
 #include <climits>
 #include <functional>
 #include <iostream>
+#include <map>
 #include <numeric>
 #include <queue>
 #include <string>
@@ -27,20 +30,26 @@
 #define REPN(i, n) FORN(i, 1, n)
 
 using namespace std;
-const int mod = 1e9 + 7;
+const int mod = 1e9 + 7, MAXN = 200001;
 
-string s;
+int n, nums[MAXN];
+pair<int, int> dp[MAXN];  // dp[i] = length, last index
 struct Solution {
-  string solve() {
-    string res;
-    int n = s.length(), l = 0, r = n - 1;  // l, r = next indices
-    while (l <= r) {
-      int len = r - l + 1;
-      if (len % 2) {
-        res += s[l++];
-      } else {
-        res += s[r--];
-      }
+  vector<int> solve() {
+    vector<int> res;
+    pair<int, int> last;
+    dp[0] = {0, -1};     // empty
+    map<int, int> prev;  // prev[i] = which index you took to form longest subseq ending with i
+    FORN(i, 1, n) {
+      int x = nums[i], p = prev[x - 1];  // p = index preceding it
+      dp[i] = {dp[p].first + 1, p};
+      prev[x] = i;
+      last = max(last, {dp[i].first, i});
+    }
+    int i = last.second;
+    while (i) {
+      res.push_back(i);
+      i = dp[i].second;
     }
     reverse(res.begin(), res.end());
     return res;
@@ -50,8 +59,12 @@ struct Solution {
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
-  cin >> s;
+  cin >> n;
+  FORN(i, 1, n)
+  cin >> nums[i];
   Solution test;
   auto res = test.solve();
-  cout << res << endl;
+  cout << res.size() << endl;
+  for (int r : res) cout << r << " ";
+  cout << endl;
 }

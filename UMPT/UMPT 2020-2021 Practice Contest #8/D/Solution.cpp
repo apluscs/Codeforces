@@ -1,10 +1,13 @@
 #include <assert.h>
 #include <math.h>
+#include <stdio.h>
+#include <string.h>
 
 #include <algorithm>
 #include <climits>
 #include <functional>
 #include <iostream>
+#include <map>
 #include <numeric>
 #include <queue>
 #include <string>
@@ -29,51 +32,56 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-int n;
-vector<string> ss;
-vector<int> nums;
+int n, m, K, grid[500][500], dp[500][500][11];
 struct Solution {
-  ll solve() {
-    vector<vector<ll>> dp(n, vector<ll>(2));  // dp[i][0] = min cost if ss[i] is not reversed, [i][1] = min cost if ss[i] is reversed
-    dp[0][1] = nums[0];                       // cost to reverse first string
-    // ll IMP = 1e19;
-    for (int i = 1; i != n; ++i) {
-      string &a = ss[i - 1], b = a, c = ss[i];  // a non reversed prev, b = reversed prev
-      reverse(b.begin(), b.end());
-      reverse(c.begin(), c.end());  // c = reversed curr
-      dp[i][0] = LLONG_MAX;
-      if (ss[i] >= a) dp[i][0] = dp[i - 1][0];
-      if (ss[i] >= b) dp[i][0] = min(dp[i][0], dp[i - 1][1]);
-      dp[i][1] = LLONG_MAX;
-      if (c >= a && dp[i - 1][0] != LLONG_MAX) dp[i][1] = nums[i] + dp[i - 1][0];
-      if (c >= b && dp[i - 1][1] != LLONG_MAX) dp[i][1] = min(dp[i][1], nums[i] + dp[i - 1][1]);
+  string solve() {
+    int res = INT_MAX;
+    memset(dp, -1, sizeof(dp));
+    for (int i = 0; i != n; ++i) {
+      dp[i][0][0] = grid[i][0];  // -1 means impossible
     }
-    // print(dp);
-    return min(dp[n - 1][0], dp[n - 1][1]);
+    for (int j = 1; j != m; ++j) {  // go col by col
+      for (int i = 0; i != n; ++i) {
+        if (out(i, j)) continue;
+        int x = grid[i][j];
+        for (int k = 0; k <= K; ++k) {  // this many passes
+          int best = INT_MAX, pk = k - is_pass(i, j);
+          if (pk == -1) continue;  // leave as -1, means this is a pass and we need -1 passes from before
+          for (int di = -1; di <= 1; ++di) {
+            int ni = i + di, p = out(ni, j - 1) ? -1 : dp[ni][j - 1][pk];
+            // printf("i=%d, j=%d, p=%d, ni=%d\n", i, j, p, ni);
+            if (p != -1) best = min(best, p);
+          }
+          dp[i][j][k] = best == INT_MAX ? -1 : best + x;
+        }
+      }
+    }
+    // for (int k = 0; k <= K; ++k) {  // this many passes
+    //   printf("k=%d\n", k);
+    //   REP(i, n) {
+    //     REP(j, m)
+    //     printf("%d ", dp[i][j][k]);
+    //     printf("\n");
+    //   }
+    // }
+    for (int i = 0; i != n; ++i) {
+      if (dp[i][m - 1][K] != -1) res = min(res, dp[i][m - 1][K]);
+    }
+    return res == INT_MAX ? "impossible" : to_string(res);
   }
-  void print(vector<int>& nums) {
-    for (auto num : nums) cout << num << " ";
-    cout << endl;
+  bool is_pass(int i, int j) {
+    return !out(i - 1, j) && !out(i + 1, j) && !out(i, j - 1) && !out(i, j + 1) && grid[i][j] < grid[i - 1][j] && grid[i][j] < grid[i + 1][j] && grid[i][j] > grid[i][j - 1] && grid[i][j] > grid[i][j + 1];
   }
-
-  void print(vector<vector<int>>& nums) {
-    for (auto& row : nums) print(row);
-  }
+  bool out(int i, int j) { return i < 0 || i >= n || j < 0 || j >= m || grid[i][j] == -1; }
 };
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
-  cin >> n;
-  nums.resize(n);
-  ss.resize(n);
-  REP(i, n) {
-    cin >> nums[i];
-  }
-  REP(i, n) {
-    cin >> ss[i];
-  }
+  cin >> n >> m >> K;
+  REP(i, n)
+  REP(j, m)
+  cin >> grid[i][j];
   Solution test;
-  auto res = test.solve();
-  cout << (res == LLONG_MAX ? -1 : res) << endl;
+  cout << test.solve() << endl;
 }
