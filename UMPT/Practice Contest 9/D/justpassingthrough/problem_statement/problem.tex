@@ -1,0 +1,43 @@
+\problemname{Just Passing Through}
+Justin and Fred are taking a road trip, traveling from West to East
+across their state. They have a few Road Trip Rules:
+\begin{enumerate}
+\item They must have an awesome time!
+\item The trip must begin somewhere along the Western edge of the state
+and finish somewhere along the Eastern edge of the state.
+\item Each step in their trip must move them either directly East,
+diagonally Northeast, or diagonally Southeast.
+\item They want to travel through exactly $n$ ``passes'' (defined below).
+\item Due to Fred's sensitivity to higher elevations, they wish to minimize
+the cumulative sum of elevations during the trip.
+\item They must have an awesome time!
+\end{enumerate}
+Because Justin and Fred are traveling Eastward, a ``pass'' is any location
+with strictly lower elevations to its East and West and strictly higher
+elevations to its North and South. Consider the elevation map 
+shown in Figure \ref{fig1:just}.
+Undrivable locations (either due to water or stubborn insistence on
+staying in-state) are shown in black, while passes are shown as gray.
+Locations adjacent to the border or to undrivable locations are not
+eligible for considerations as passes.
+
+\begin{figure}[!h]
+\centering
+\includegraphics[width=0.33\textwidth]{pic1}
+\caption{A sample elevation map}
+\label{fig1:just}
+\end{figure}
+
+\section*{Input}
+The input begins with three integers $r$ $c$ $n$ representing the
+number of rows and columns in the representation of the state's topography
+($3 \leq r, c \leq 500$) and the exact number of passes to be crossed
+($0 \leq n \leq 10$). The next $r$ lines each contain
+$c$ elevation entries. Undrivable locations are represented by
+$-1$, and all other elevations are between $0$ and $1\, 000$. There is
+guaranteed to be at least one drivable location on both the Eastern and
+Western borders.
+
+\section*{Output}
+Output the sum of the elevations along the optimal path which satisfies
+the Road Trip Rules. If no such path exists, output \texttt{impossible}.
