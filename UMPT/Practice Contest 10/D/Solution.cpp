@@ -10,7 +10,6 @@
 #include <map>
 #include <numeric>
 #include <queue>
-#include <set>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -33,20 +32,29 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-int n, nums[200001];
+int c, m, x;
 struct Solution {
-  string solve() {
-    string res;
-    return res;
+  int solve() {
+    int b = min(c, m);
+    c -= b, m -= b;  // ideally, but do we have enough 'others'?
+    int others = c + m + x;
+    // printf("b=%d, others=%d\n", b, others);
+    if (b < others) return b;  // not enough cores
+    return b - (b - others + 2) / 3;
   }
 };
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
-  cin >> n;
-  REP(i, n)
-  cin >> nums[i];
+  int Q;
+  cin >> Q;
   Solution test;
-  cout << test.solve() << endl;
+  while (Q--) {
+    cin >> c >> m >> x;
+    // if (i == 26) {
+    //   printf("c=%d, m=%d, x=%d\n", c, m, x);
+    // }
+    cout << test.solve() << endl;
+  }
 }

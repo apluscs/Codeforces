@@ -33,20 +33,31 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-int n, nums[200001];
+int n;
 struct Solution {
-  string solve() {
-    string res;
-    return res;
+  vector<ll> solve() {
+    set<ll> res;
+    int k = sqrt(n);
+    for (int i = 1; i <= k; ++i) {
+      if (n % i) continue;  //not a factor
+      res.insert(arithmetic_sum(i));
+      res.insert(arithmetic_sum(n / i));
+    }
+    return vector<ll>(res.begin(), res.end());
+  }
+  ll arithmetic_sum(int i) {
+    ll m = n / i;  // #terms
+    return m / 2.0 * (n + 2 - i);
   }
 };
-
+void print(const vector<ll>& nums) {
+  for (auto num : nums) cout << num << " ";
+  cout << endl;
+}
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
   cin >> n;
-  REP(i, n)
-  cin >> nums[i];
   Solution test;
-  cout << test.solve() << endl;
+  print(test.solve());
 }

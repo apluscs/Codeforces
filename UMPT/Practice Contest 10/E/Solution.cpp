@@ -10,7 +10,6 @@
 #include <map>
 #include <numeric>
 #include <queue>
-#include <set>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -33,10 +32,18 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-int n, nums[200001];
+int n;
+string s, t;
 struct Solution {
-  string solve() {
-    string res;
+  int solve() {
+    int res = 0;
+    for (int i = 0; i < n; ++i) {
+      if (s[i] == t[i]) continue;
+      res++;
+      if (i != n - 1 && s[i] != s[i + 1] && s[i] != t[i] && s[i] == t[i + 1]) { // flip adj
+        i++;  
+      }
+    }
     return res;
   }
 };
@@ -44,9 +51,7 @@ struct Solution {
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
-  cin >> n;
-  REP(i, n)
-  cin >> nums[i];
+  cin >> n >> s >> t;
   Solution test;
   cout << test.solve() << endl;
 }
