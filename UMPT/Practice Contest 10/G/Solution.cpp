@@ -10,6 +10,7 @@
 #include <map>
 #include <numeric>
 #include <queue>
+#include <set>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -28,31 +29,22 @@
 #define FOREACH(a, b) for (auto&(a) : (b))
 #define REP(i, n) FOR(i, 0, n)
 #define REPN(i, n) FORN(i, 1, n)
+#define print_arr(arr, n) \
+  REP(i, n)               \
+  cout << arr[i] << " ";  \
+  cout << endl;
 
 using namespace std;
 const int mod = 1e9 + 7;
 
-int n, m, A[201], B[201], K = 1 << 9;
+int n;
+ll hx, hy, ux, uy, lines[301][3];
 struct Solution {
   int solve() {
-    vector<bool> dp(K);
-    int res = K;
-    dp[0] = true;
+    int res=0;
     REP(i, n) {
-      vector<bool> next(K);
-      // printf("i=%d\n", i);
-      REP(j, m) {
-        int x = A[i] & B[j];
-        for (int p = 0; p != K; ++p)
-          if (dp[p]) {
-            next[p | x] = true;
-            // printf("p=%d, x=%d, i=%d, j=%d\n", p, x,A[i],B[j]);
-          }
-      }
-      dp = next;
-    }
-    REP(j, K) {
-      if (dp[j]) res = min(res, j);
+      ll h = lines[i][0] * hx + lines[i][1] * hy + lines[i][2], u = lines[i][0] * ux + lines[i][1] * uy + lines[i][2];
+      res += h > 0 && u < 0 || h < 0 && u > 0;
     }
     return res;
   }
@@ -61,11 +53,9 @@ struct Solution {
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
-  cin >> n >> m;
+  cin >> hx >> hy >> ux >> uy >> n;
   REP(i, n)
-  cin >> A[i];
-  REP(i, m)
-  cin >> B[i];
+  cin >> lines[i][0] >> lines[i][1] >> lines[i][2];
   Solution test;
   cout << test.solve() << endl;
 }

@@ -32,26 +32,55 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-int n;
-string s, t;
+int n, m;
+vector<pair<int, int>> adj[101];
 struct Solution {
-  int solve() {
+  int s, e;
+  int solve(int s, int e) {
+    this->s = s, this->e = e;
     int res = 0;
-    for (int i = 0; i < n; ++i) {
-      if (s[i] == t[i]) continue;
-      res++;
-      if (i != n - 1 && s[i] != s[i + 1] && s[i] != t[i] && s[i] == t[i + 1]) { // flip adj
-        i++;  
-      }
+    REPN(c, m) {
+      res += able(c);
     }
     return res;
+  }
+  bool able(int C) {
+    bool vis[101] = {0};
+    queue<int> que;
+    que.push(s);
+    vis[s] = true;
+    while (!que.empty()) {
+      int x = que.front();
+      que.pop();
+      if (x == e) return true;
+      for (auto p : adj[x]) {
+        if (p.second != C) continue;
+        int y = p.first;
+        if (vis[y]) continue;
+        vis[y] = true;
+        que.push(y);
+      }
+    }
+    return false;
   }
 };
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
-  cin >> n >> s >> t;
+  cin >> n >> m;
+  int a, b, c, Q;
+  REP(i, m) {
+    cin >> a >> b >> c;
+    a--, b--;
+    adj[a].push_back({b, c});
+    adj[b].push_back({a, c});
+  }
   Solution test;
-  cout << test.solve() << endl;
+  cin >> Q;
+  while (Q--) {
+    cin >> a >> b;
+    a--, b--;
+    cout << test.solve(a, b) << endl;
+  }
 }

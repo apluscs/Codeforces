@@ -10,6 +10,7 @@
 #include <map>
 #include <numeric>
 #include <queue>
+#include <set>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -32,32 +33,28 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-int n, k;
 string s;
+int l, r, k;
 struct Solution {
-  int solve() {
-    int res = 0, G = n / k;
-    for (int i = 0; i != (k + 1) / 2; ++i) {
-      int frq[26] = {0}, total = (2 - (i == k / 2 && k % 2)) * G, best = 0;  // does each group contribute 1 or 2?
-      for (int g = 0; g < n; g += k) {                                       // which group
-        frq[s[g + i] - 'a']++;
-        if (total == 2 * G) frq[s[g + k - i - 1] - 'a']++;
-      }
-      for (int f : frq) best = max(best, f);
-      res += total - best;
-    }
-    return res;
+  void update() {
+    int len = r - l + 1;
+    k %= len;
+    string x = s.substr(r - k + 1, k) + s.substr(l, len - k);
+    s = s.substr(0, l) + x + s.substr(r + 1);
   }
 };
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
+  cin >> s;
+  int Q;
+  cin >> Q;
   Solution test;
-  int T;
-  cin >> T;
-  while (T--) {
-    cin >> n >> k >> s;
-    cout << test.solve() << endl;
+  while (Q--) {
+    cin >> l >> r >> k;
+    l--, r--;
+    test.update();
   }
+  cout << s << endl;
 }

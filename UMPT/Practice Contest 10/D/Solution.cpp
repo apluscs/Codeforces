@@ -32,29 +32,40 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-int c, m, x;
+int n, m;
+vector<string> ss;
 struct Solution {
   int solve() {
-    int b = min(c, m);
-    c -= b, m -= b;  // ideally, but do we have enough 'others'?
-    int others = c + m + x;
-    // printf("b=%d, others=%d\n", b, others);
-    if (b < others) return b;  // not enough cores
-    return b - (b - others + 2) / 3;
+    vector<unordered_map<string, int>> min_rots(n);
+    REP(i, n) {
+      REP(j, m) {
+        string s = ss[i].substr(j) + ss[i].substr(0, j);
+        if (!min_rots[i].count(s)) min_rots[i][s] = j;
+      }
+    }
+    int res = INT_MAX;
+    REP(j, m) {
+      string t = ss[0].substr(j) + ss[0].substr(0, j);
+      int curr = j;
+      FOR(i, 1, n) {
+        if (!min_rots[i].count(t)) return -1;  // all should be able to
+        curr += min_rots[i][t];
+      }
+      res = min(res, curr);
+    }
+    return res;
   }
 };
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
-  int Q;
-  cin >> Q;
   Solution test;
-  while (Q--) {
-    cin >> c >> m >> x;
-    // if (i == 26) {
-    //   printf("c=%d, m=%d, x=%d\n", c, m, x);
-    // }
-    cout << test.solve() << endl;
+  cin >> n;
+  ss.resize(n);
+  REP(i, n) {
+    cin >> ss[i];
   }
+  m = ss[0].length();
+  cout << test.solve() << endl;
 }

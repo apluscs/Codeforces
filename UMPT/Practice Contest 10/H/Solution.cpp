@@ -29,35 +29,98 @@
 #define FOREACH(a, b) for (auto&(a) : (b))
 #define REP(i, n) FOR(i, 0, n)
 #define REPN(i, n) FORN(i, 1, n)
+#define print_arr(arr, n) \
+  REP(i, n)               \
+  cout << arr[i] << " ";  \
+  cout << endl;
 
 using namespace std;
 const int mod = 1e9 + 7;
 
-int n;
+int n, m, K;
+vector<int> in[200001], out[200001];
+int path[200001], dist[200001];
 struct Solution {
-  vector<ll> solve() {
-    set<ll> res;
-    int k = sqrt(n);
-    for (int i = 1; i <= k; ++i) {
-      if (n % i) continue;  //not a factor
-      res.insert(arithmetic_sum(i));
-      res.insert(arithmetic_sum(n / i));
+  vector<int> solve() {
+    bfs();
+    int low = 0, high = 0;
+    // print_arr(dist, n);
+    // print_arr(path, K);
+    // REP(i, K - 1) {
+    //   int x = path[i], z = path[i + 1], best = INT_MAX, count = 0;
+    //   if (dist[z] >= dist[x]) {
+    //     low++, high++;
+    //     continue;
+    //   }
+    //   for (int y : out[x]) {
+    //     if (y != z && dist[y] == dist[z]) {
+    //       high++;
+    //       printf("i=%d\n", i);
+    //       break;
+    //     }
+    //   }
+    // }
+    REP(i, K - 1) {
+      int x = path[i], z = path[i + 1], best = INT_MAX, count = 0;
+      for (int y : out[x]) {
+        if (best > dist[y]) {
+          count = 1, best = dist[y];
+        } else if (best == dist[y]) {
+          count++;
+          // printf("best=%d, y=%d\n", best, y);
+        }
+      }
+      if (dist[z] > best) low++, high++;  // had to rebuild
+      else if (count > 1) {
+        // printf("i=%d,x=%d,z=%d, best=%d, count=%d\n", i, x, z, best, count);
+        high++;
+      }
     }
-    return vector<ll>(res.begin(), res.end());
+    return {low, high};
   }
-  ll arithmetic_sum(int i) {
-    ll m = n / i;  // #terms
-    return m / 2.0 * (n + 2 - i);
+  /*i=2
+i=4
+i=10
+i=11*/
+  void bfs() {
+    fill_n(dist, n, INT_MAX);
+    dist[path[K - 1]] = 0;  // the source
+    queue<int> que;
+    que.push(path[K - 1]);
+    while (!que.empty()) {
+      int x = que.front();
+      que.pop();
+      // cout << x << "," << d << endl;
+      for (int y : in[x]) {
+        int nd = dist[x] + 1;
+        if (dist[y] != INT_MAX) continue;  // alr processed
+        que.push(y);
+        dist[y] = nd;
+      }
+    }
   }
 };
-void print(const vector<ll>& nums) {
+void print(const vector<int>& nums) {
   for (auto num : nums) cout << num << " ";
   cout << endl;
 }
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
-  cin >> n;
+  cin >> n >> m;
+  int a, b;
+  REP(i, m) {
+    cin >> a >> b;
+    a--, b--;
+    in[b].push_back(a);
+    out[a].push_back(b);
+  }
+  cin >> K;
+  REP(i, K) {
+    cin >> path[i];
+    path[i]--;
+  }
   Solution test;
+  // print(out[10]);
   print(test.solve());
 }

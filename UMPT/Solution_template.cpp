@@ -29,7 +29,11 @@
 #define FOREACH(a, b) for (auto&(a) : (b))
 #define REP(i, n) FOR(i, 0, n)
 #define REPN(i, n) FORN(i, 1, n)
-
+#define print_arr(arr, n) \
+  REP(i, n)               \
+  cout << arr[i] << " ";  \
+  cout << endl;
+  
 using namespace std;
 const int mod = 1e9 + 7;
 

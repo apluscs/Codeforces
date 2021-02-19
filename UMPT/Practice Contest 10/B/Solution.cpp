@@ -32,24 +32,22 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-int n;
-string s;
+ll n, x, y;
 struct Solution {
   string solve() {
-    int x = s.find_first_of('8');
-    if (x == -1) return "NO";
-    return x <= n - 11 ? "YES" : "NO";
+    ll dx = dist(1, 1), dy = dist(n, n);
+    return dx <= dy ? "White" : "Black";
+  }
+  ll dist(ll a, ll b) {
+    ll h = abs(a - x), v = abs(y - b);
+    return h + v - min(h, v);
   }
 };
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
-  int T;
-  cin >> T;
   Solution test;
-  while (T--) {
-    cin >> n >> s;
-    cout << test.solve() << endl;
-  }
+  cin >> n >> x >> y;
+  cout << test.solve() << endl;
 }

@@ -32,23 +32,17 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-ll n;
-int a, b;
+int n, m, k;
 struct Solution {
-  ll solve() {
-    int c2 = min(a + a, b);
-    return n / 2 * c2 + a * (n % 2);
+  string solve() {
+    return m >= n && k >= n ? "Yes" : "No";
   }
 };
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
-  int Q;
-  cin >> Q;
   Solution test;
-  REP(i, Q) {
-    cin >> n >> a >> b;
-    cout << test.solve() << endl;
-  }
+  cin >> n >> m >> k;
+  cout << test.solve() << endl;
 }
