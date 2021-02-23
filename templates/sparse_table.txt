@@ -1,0 +1,13 @@
+ // make second dimension = ceil(log2(first_dim)) + 1
+ pair<int, int> ST[100001][20]; 
+
+void build_ST() {
+  for (int i = 0; i < n; ++i) ST[i][0] = {nums[i], i};
+  for (int j = 1; j != 18; ++j)
+    for (int i = 0; i + (1 << j) <= n; ++i)  // will this be used?
+      ST[i][j] = max(ST[i][j - 1], ST[i + (1 << (j - 1))][j - 1]);
+}
+int query(int s, int e) {                                // find argmax nums[i] for this range
+  int x = floor(log2(e - s + 1));                        // log2(range)
+  return max(ST[s][x], ST[e - (1 << x) + 1][x]).second;  
+}

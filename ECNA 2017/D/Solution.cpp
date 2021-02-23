@@ -38,20 +38,41 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-int n, nums[200001];
+int n, K;
 struct Solution {
-  string solve() {
-    string res;
-    return res;
+  int x = 0;
+  stack<int> st;
+  Solution() {
+    st.push(0);  // first child
+  }
+  void pass(int t) {
+    t = (t % n + n) % n;
+    x = (x + t) % n;  // x = top of stack
+    st.push(x);
+  }
+  void undo(int t) {
+    while(t--) {
+      st.pop();
+    }
+    x = st.top();
   }
 };
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
-  cin >> n;
-  REP(i, n)
-  cin >> nums[i];
+  cin >> n >> K;
+  string temp;
   Solution test;
-  cout << test.solve() << endl;
+  int m;
+  REP(i, K) {
+    cin >> temp;
+    if (temp == "undo") {
+      cin >> m;
+      test.undo(m);
+    } else {
+      test.pass(stoi(temp));
+    }
+  }
+  cout << test.x << endl;
 }

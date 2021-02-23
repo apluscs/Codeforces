@@ -11,7 +11,6 @@
 #include <numeric>
 #include <queue>
 #include <set>
-#include <stack>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -38,20 +37,49 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-int n, nums[200001];
+int n, m;
+vector<string> grid;
+bool vis[50][50];
 struct Solution {
   string solve() {
-    string res;
-    return res;
+    memset(vis, 0, sizeof(vis));
+    REP(i, n) {
+      REP(j, m) {
+        if (!vis[i][j] && isCycle(i, j, -1, -1)) return "Yes";
+      }
+    }
+    return "No";
   }
+  const int dir[4][2] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+  bool isCycle(int i, int j, int pi, int pj) {
+    vis[i][j] = true;
+    // printf("i=%d, j=%d\n", i, j);
+    for (auto d : dir) {
+      int ni = i + d[0], nj = j + d[1];
+      if (out(ni, nj) || grid[ni][nj] != grid[i][j]) continue;  // valid neighbor
+      // printf("ni=%d, nj=%d,i=%d, j=%d\n", ni, nj, i, j);
+      if (!vis[ni][nj]) {
+        if (isCycle(ni, nj, i, j)) {
+          // printf("ni=%d, nj=%d\n", ni, nj);
+          return true;
+        }
+      } else if (ni != pi || nj != pj) {
+        // printf("**ni=%d, nj=%d,i=%d, j=%d\n", ni, nj, i, j);
+        return true;
+      }
+    }
+    return false;
+  }
+  bool out(int i, int j) { return i <= -1 || i >= n || j <= -1 || j >= m; }
 };
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
-  cin >> n;
-  REP(i, n)
-  cin >> nums[i];
+  cin >> n >> m;
   Solution test;
+  grid.resize(n);
+  REP(i, n)
+  cin >> grid[i];
   cout << test.solve() << endl;
 }

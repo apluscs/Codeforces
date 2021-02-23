@@ -38,20 +38,35 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-int n, nums[200001];
+ll ju[10], jr[10], mu[10], mr[10], mt[10];
 struct Solution {
-  string solve() {
-    string res;
-    return res;
+  ll solve() {
+    ll res = 0;
+    REP(round, 3) {
+      REP(i, 10) {          // machine Jim uses
+        if (mt[i] > res) {  // Jim can use it
+          res += ju[i] + jr[i], mt[i] = max(mt[i], res - jr[i]);
+          // printf("i=%d, mt[i]=%lld\n", i, mt[i]);
+        } else {
+          ll span = res - mt[i], period = mr[i] + mu[i], k = span / period;
+          mt[i] += k * period;            // last one <= res
+          res = max(res, mt[i] + mu[i]);  // must wait for Bob to finish using
+          res += ju[i] + jr[i];           // after Bob uses and Jim uses and recovers
+          mt[i] = max(res - jr[i], mt[i] + mu[i] + mr[i]);
+        }
+      }
+    }
+    return res - jr[9];  // don't need to recover at the end
   }
 };
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
-  cin >> n;
-  REP(i, n)
-  cin >> nums[i];
+  REP(i, 10)
+  cin >> ju[i] >> jr[i];
+  REP(i, 10)
+  cin >> mu[i] >> mr[i] >> mt[i];
   Solution test;
   cout << test.solve() << endl;
 }

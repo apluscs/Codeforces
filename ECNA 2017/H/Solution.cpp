@@ -38,20 +38,34 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-int n, nums[200001];
+int n, m;
+string grid[100];
 struct Solution {
-  string solve() {
-    string res;
+  const int dir[8][2] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}, {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+  int solve() {
+    int res = 0;
+    REP(i, n)
+    REP(j, m) {
+      if (grid[i][j] == '#') flood(i, j), res++;
+    }
     return res;
   }
+  void flood(int i, int j) {
+    if (out(i, j) || grid[i][j] == '.') return;
+    grid[i][j] = '.';
+    for (auto d : dir) {
+      flood(i + d[0], j + d[1]);
+    }
+  }
+  bool out(int i, int j) { return i <= -1 || i >= n || j <= -1 || j >= m; }
 };
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
-  cin >> n;
+  cin >> n >> m;
   REP(i, n)
-  cin >> nums[i];
+  cin >> grid[i];
   Solution test;
   cout << test.solve() << endl;
 }

@@ -11,7 +11,6 @@
 #include <numeric>
 #include <queue>
 #include <set>
-#include <stack>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -38,20 +37,37 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-int n, nums[200001];
+int n;
 struct Solution {
-  string solve() {
-    string res;
-    return res;
+  int solve() {
+    int res = INT_MAX;
+    FOR(b, 1, 1 << 9) {
+      vector<int> digits;
+      int sum = 0;
+      REP(i, 9) {
+        if (b & (1 << i)) {
+          digits.push_back(i + 1);
+          sum += i + 1;
+        }
+      }
+      if (sum != n) continue;
+      sort(digits.begin(), digits.end());
+      sum = 0;
+      for (int d : digits) sum = sum * 10 + d;
+      res = min(res, sum);
+    }
+    return res == INT_MAX ? -1 : res;
   }
 };
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
-  cin >> n;
-  REP(i, n)
-  cin >> nums[i];
+  int T;
+  cin >> T;
   Solution test;
-  cout << test.solve() << endl;
+  while (T--) {
+    cin >> n;
+    cout << test.solve() << endl;
+  }
 }

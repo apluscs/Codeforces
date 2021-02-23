@@ -38,11 +38,29 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-int n, nums[200001];
+int n;
+ll HIGH = 1LL << 32;
 struct Solution {
   string solve() {
-    string res;
-    return res;
+    string type;
+    int x;
+    ll res = 0, curr = 1;
+    stack<ll> st;
+    st.push(1);
+    REP(i, n) {
+      cin >> type;
+      if (type == "add") {
+        res += st.top();
+      } else if (type == "for") {
+        cin >> x;
+        st.push(min(HIGH, x * st.top()));  // if not used, won't be inaccurate; if used once, will be caught
+      } else {                             // end
+        st.pop();
+      }
+      if (res >= HIGH) return "OVERFLOW!!!";
+      // printf("curr=%d, res=%d, type=%s\n", curr, res, type.c_str());
+    }
+    return to_string(res);
   }
 };
 
@@ -50,8 +68,6 @@ int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
   cin >> n;
-  REP(i, n)
-  cin >> nums[i];
   Solution test;
   cout << test.solve() << endl;
 }

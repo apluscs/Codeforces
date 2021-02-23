@@ -38,20 +38,27 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-int n, nums[200001];
+int n, m, cals[101], dp[101][200001];
 struct Solution {
-  string solve() {
-    string res;
-    return res;
+  int solve() {
+    memset(dp, -1, sizeof(dp));
+    return dfs(0, m, m);
+  }
+  int dfs(int i, int j, int prev) {  // j = current capacity
+    if (i >= n) return 0;
+    if (dp[i][j] != -1) return dp[i][j];
+    dp[i][j] = max(dfs(i + 1, prev, 0), max(dfs(i + 1, j * 2 / 3, j) + min(cals[i], j), dfs(i + 2, m, 0)));
+    // printf("i=%d, j=%d, res=%d\n", i, j, dp[i][j]);
+    return dp[i][j];
   }
 };
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
-  cin >> n;
+  cin >> n >> m;
   REP(i, n)
-  cin >> nums[i];
+  cin >> cals[i];
   Solution test;
   cout << test.solve() << endl;
 }

@@ -38,20 +38,53 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-int n, nums[200001];
+int N;  // # nodes
+bool isa[500][500], hasa[500][500];
+unordered_map<string, int> nodes;
 struct Solution {
-  string solve() {
-    string res;
-    return res;
+  Solution() {
+    N = nodes.size();
+    REP(k, N) {
+      REP(i, N) {
+        REP(j, N) {
+          isa[i][j] = isa[i][j] || isa[i][k] && isa[k][j];
+          hasa[i][j] = hasa[i][j] || hasa[i][k] && hasa[k][j] || isa[i][k] && hasa[k][j] || hasa[i][k] && isa[k][j];
+        }
+      }
+    }
+  }
+  string solve(bool t, int S, int T) {
+    if (t)
+      return hasa[S][T] ? "true" : "false";
+    else
+      return isa[S][T] ? "true" : "false";
   }
 };
-
+int get_node(string s) {
+  if (nodes.count(s)) return nodes[s];
+  int x = nodes.size();
+  return nodes[s] = x;
+}
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
-  cin >> n;
-  REP(i, n)
-  cin >> nums[i];
+  int n, m;
+  cin >> n >> m;
+  string c1, t, c2;
+  memset(isa, 0, sizeof(isa)), memset(hasa, 0, sizeof(hasa));
+  REP(i, n) {
+    cin >> c1 >> t >> c2;
+    int x = get_node(c1), y = get_node(c2);
+    isa[x][x] = isa[y][y] = true;
+    if (t == "is-a")
+      isa[x][y] = true;
+    else
+      hasa[x][y] = true;
+  }
   Solution test;
-  cout << test.solve() << endl;
+  REPN(i, m) {
+    cin >> c1 >> t >> c2;
+    int x = get_node(c1), y = get_node(c2);
+    printf("Query %d: %s\n", i, test.solve(t == "has-a", x, y).c_str());
+  }
 }
