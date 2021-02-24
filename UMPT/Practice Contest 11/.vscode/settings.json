@@ -9,6 +9,8 @@
     "random": "cpp",
     "set": "cpp",
     "queue": "cpp",
-    "stack": "cpp"
-  }
+    "stack": "cpp",
+    "limits": "cpp"
+  },
+  "search.useGlobalIgnoreFiles": true
 }

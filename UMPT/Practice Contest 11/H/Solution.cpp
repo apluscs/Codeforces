@@ -55,7 +55,7 @@ struct Solution {
       left->build(), right->build();
       biggest = max(left->biggest, right->biggest), sum = left->sum + right->sum;
     }
-    void mod_update(int fr, int to, ll z) {
+    void mod_update(int fr, int to, int z) {
       if (fr > to || biggest < z) return;  // CRUCIAL, guarantees good time
       if (s == e) {
         sum = biggest %= z;
@@ -66,9 +66,9 @@ struct Solution {
       biggest = max(left->biggest, right->biggest), sum = left->sum + right->sum;
       // printf("s=%d, e=%d, fr=%d, to=%d, big=%lld, sum=%lld\n", s, e, fr, to, biggest, sum);
     }
-    void assn_update(int i, ll x) {
+    void assn_update(int i, int x) {
       if (i < s || i > e) return;
-      if (i == s) {
+      if (i == s && i == e) {
         biggest = sum = x;
         return;
       }  // otherwise need to call children, but make sure they are up to date
