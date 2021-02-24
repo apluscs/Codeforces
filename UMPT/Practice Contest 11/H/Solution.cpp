@@ -41,40 +41,45 @@ const int mod = 1e9 + 7;
 int n, m, nums[100001];
 struct Solution {
   struct Node {
-    int s, e, m, lazy = 0;
+    int s, e, m;
     Node *left, *right;
-    ll res;
-    Node(int s, int e) : s(s), e(e), m((s + e) / 2), left(nullptr), right(nullptr), res(0) {
+    ll biggest = 0, sum = 0;  // sum is used for type1 query, max helps for type2 update
+    Node(int s, int e) : s(s), e(e), m((s + e) / 2), left(nullptr), right(nullptr) {
     }
-    int build() {
-      if (s == e) return res = nums[s];
+    void build() {
+      if (s == e) {
+        biggest = sum = nums[s];
+        return;
+      }
       left = new Node(s, m), right = new Node(m + 1, e);
       left->build(), right->build();
-      return res = left->res + right->res;
+      biggest = max(left->biggest, right->biggest), sum = left->sum + right->sum;
     }
-    ll mod_update(int fr, int to, int z) {
-      if (fr > to) return res;
-      cout << fr << "," << to << "," << z << "," << s << "," << e << endl;
-      if (fr == s && to == e) {
-        res %= z, lazy = !lazy ? z : min(lazy, z);
-        return res;
+    void mod_update(int fr, int to, ll z) {
+      if (fr > to || biggest < z) return;  // CRUCIAL, guarantees good time
+      if (s == e) {
+        sum = biggest %= z;
+        // printf("s=%d, e=%d, fr=%d, to=%d, big=%lld, sum=%lld\n", s, e, fr, to, biggest, sum);
+        return;
       }
-      return res = left->mod_update(max(fr, s), min(to, m), z) + right->mod_update(max(m + 1, fr), min(to, e), z);
+      left->mod_update(max(left->s, fr), min(left->e, to), z), right->mod_update(max(right->s, fr), min(right->e, to), z);
+      biggest = max(left->biggest, right->biggest), sum = left->sum + right->sum;
+      // printf("s=%d, e=%d, fr=%d, to=%d, big=%lld, sum=%lld\n", s, e, fr, to, biggest, sum);
     }
-    ll assn_update(int i, int x) {
-      if (i < s || i > e) return res;
+    void assn_update(int i, ll x) {
+      if (i < s || i > e) return;
       if (i == s) {
-        return res = x;
+        biggest = sum = x;
+        return;
       }  // otherwise need to call children, but make sure they are up to date
-      if (lazy) left->mod_update(left->s, left->e, lazy), right->mod_update(right->s, right->e, lazy), lazy = 0;
-      return res = left->assn_update(i, x) + right->assn_update(i, x);
+      left->assn_update(i, x), right->assn_update(i, x);
+      biggest = max(left->biggest, right->biggest), sum = left->sum + right->sum;
     }
     ll query(int fr, int to) {
       if (fr > to) return 0;
       if (fr == s && to == e) {
-        return res;
+        return sum;
       }
-      if (lazy) left->mod_update(left->s, left->e, lazy), right->mod_update(right->s, right->e, lazy), lazy = 0;
       return left->query(max(fr, s), min(to, m)) + right->query(max(m + 1, fr), min(to, e));
     }
   };
