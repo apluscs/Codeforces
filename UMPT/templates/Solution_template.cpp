@@ -10,6 +10,8 @@
 #include <map>
 #include <numeric>
 #include <queue>
+#include <set>
+#include <stack>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -28,23 +30,28 @@
 #define FOREACH(a, b) for (auto&(a) : (b))
 #define REP(i, n) FOR(i, 0, n)
 #define REPN(i, n) FORN(i, 1, n)
+#define print_arr(arr, n) \
+  REP(i, n)               \
+  cout << arr[i] << " ";  \
+  cout << endl;
 
 using namespace std;
 const int mod = 1e9 + 7;
 
-ll a, b, c;
+int n, nums[200001];
 struct Solution {
-  ll solve() {
-    ll lo = min(a, b) * 2;
-    if (lo < a + b) lo++;
-    return lo + c * 2;
+  string solve() {
+    string res;
+    return res;
   }
 };
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
+  cin >> n;
+  REP(i, n)
+  cin >> nums[i];
   Solution test;
-  cin >> a >> b >> c;
   cout << test.solve() << endl;
 }

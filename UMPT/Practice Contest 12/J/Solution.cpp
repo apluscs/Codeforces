@@ -38,20 +38,42 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-int n, nums[200001];
+int n, res[300001];
+vector<int> kids[300001];
 struct Solution {
-  string solve() {
-    string res;
-    return res;
+  set<pair<int, int>> solve(int i) {  // <subtree size, index it came from>
+    set<pair<int, int>> curr;
+    for (int j : kids[i]) {
+      auto temp = solve(j);
+      if (temp.size() > curr.size()) swap(temp, curr);  // want curr to be larger
+      curr.insert(temp.begin(), temp.end());
+    }
+    curr.insert({curr.size() + 1, i});  // mark yourself
+    int x = curr.size();
+    // printf("i=%d\n", i);
+    // print(curr);
+    res[i] = curr.lower_bound({(x + 1) / 2, 0})->second;
+    return move(curr);
+  }
+  void print(set<pair<int, int>>& curr) {
+    for (auto& p : curr) printf("(%d, %d) ", p.first, p.second);
+    printf("\n");
   }
 };
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
-  cin >> n;
-  REP(i, n)
-  cin >> nums[i];
+  int T, x;
+  cin >> n >> T;
+  FOR(i, 1, n) {
+    cin >> x;  // parent of node i
+    kids[--x].push_back(i);
+  }
   Solution test;
-  cout << test.solve() << endl;
+  test.solve(0);
+  while (T--) {
+    cin >> x, x--;
+    cout << res[x] + 1 << endl;
+  }
 }

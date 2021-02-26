@@ -67,6 +67,7 @@ H horz[5001];
 struct Solution {
   ll solve() {
     ll res = 0;
+    sort(vert, vert + n);
     REP(i, n) {
       vector<H> hs;
       memset(tree, 0, sizeof(tree));
@@ -79,7 +80,7 @@ struct Solution {
       int h = hs.size() - 1;  // starts at H with largest left point
       FORD(j, i - 1, 0) {
         int crit_x = vert[j].x;
-        while (h != -1 && hs[h].x1 > crit_x) h--, update(horz[h].y, -1);  // ignore anything that isn't left enough to cover vert[j]
+        while (h != -1 && hs[h].x1 > crit_x) update(horz[h--].y, -1);  // ignore anything that isn't left enough to cover vert[j]
         ll curr = query(min(vert[i].y2, vert[j].y2)) - query(max(vert[i].y1, vert[j].y1) - 1);
         if (curr <= 1) continue;
         res += curr * (curr - 1) / 2;

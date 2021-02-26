@@ -32,12 +32,11 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-ll a, b, c;
+ll n, m, r, c;
 struct Solution {
   ll solve() {
-    ll lo = min(a, b) * 2;
-    if (lo < a + b) lo++;
-    return lo + c * 2;
+    ll horz = max(c - 1, m - c), vert = max(r - 1, n - r);
+    return horz + vert;
   }
 };
 
@@ -45,6 +44,10 @@ int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
   Solution test;
-  cin >> a >> b >> c;
-  cout << test.solve() << endl;
+  int T;
+  cin >> T;
+  while (T--) {
+    cin >> n >> m >> r >> c;
+    cout << test.solve() << endl;
+  }
 }

@@ -10,8 +10,6 @@
 #include <map>
 #include <numeric>
 #include <queue>
-#include <set>
-#include <stack>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -38,10 +36,36 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-int n, nums[200001];
+int n, tree[1000005], nums[1000001];
 struct Solution {
-  string solve() {
-    string res;
+  int solve() {
+    REPN(i, n)
+    if (count(i)) return i;
+    return 0;
+  }
+  void remove(int i) {  // remove i'th value
+    int v = get_ith(i);
+    // printf("i=%d, v=%d\n", i, v);
+    update(v, -1);
+  }
+  int get_ith(int i) {
+    int low = 1, high = n;
+    while (low <= high) {
+      int mid = (low + high) / 2;
+      if (count(mid) < i)
+        low = mid + 1;
+      else
+        high = mid - 1;
+    }
+    return low;
+  }
+  void update(int v, int d) {  // d is the incoming change
+    for (int i = v; i <= n; i += (i & -i)) tree[i] += d;
+  }
+  int count(int v) {
+    int res = 0;
+    for (int i = v; i; i -= (i & -i)) res += tree[i];
+    // printf("v=%d, count=%d\n", v, res);
     return res;
   }
 };
@@ -49,9 +73,19 @@ struct Solution {
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
-  cin >> n;
-  REP(i, n)
-  cin >> nums[i];
+  memset(tree, 0, sizeof(tree));
   Solution test;
+  int x, T;
+  cin >> n >> T;
+  REP(i, n) {
+    cin >> x, test.update(x, 1);
+  }
+  REP(i, T) {
+    cin >> x;
+    if (x > 0)
+      test.update(x, 1);
+    else
+      test.remove(-x);
+  }
   cout << test.solve() << endl;
 }

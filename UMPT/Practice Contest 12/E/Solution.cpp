@@ -10,8 +10,6 @@
 #include <map>
 #include <numeric>
 #include <queue>
-#include <set>
-#include <stack>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -38,20 +36,64 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-int n, nums[200001];
+int n, m;
+string ss[10];
 struct Solution {
+  string res, curr;
+  vector<string> opts;
+  bool bad[10];
   string solve() {
-    string res;
+    res = "-1", curr = "", opts.clear(), opts.resize(m), memset(bad, 0, sizeof(bad));
+    REP(i, m) {  // col
+      REP(j, n) {
+        if (opts[i].find(ss[j][i]) == -1) opts[i] += ss[j][i];
+      }
+    }
+    dfs(0);
     return res;
+  }
+  void dfs(int i) {  // bad = which strings in ss have 1 flag alr
+    if (i == m) {
+      // cout << curr << endl;
+      if (res == "-1") res = curr;
+      return;
+    }
+    bool temp[10];
+    copy(bad, bad + n, temp);
+    for (char c : opts[i]) {
+      bool flag = false;
+      REP(j, n) {
+        if (ss[j][i] != c) {
+          if (bad[j]) {
+            flag = true;
+            break;
+          }
+          bad[j] = true;
+        }
+      }
+      if (flag) {
+        copy(temp, temp + n, bad);
+        continue;
+      }
+      curr += c;
+      dfs(i + 1);
+      curr.pop_back();
+      copy(temp, temp + n, bad);
+    }
   }
 };
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
-  cin >> n;
-  REP(i, n)
-  cin >> nums[i];
   Solution test;
-  cout << test.solve() << endl;
+  int T;
+  cin >> T;
+  while (T--) {
+    cin >> n >> m;
+    REP(i, n) {
+      cin >> ss[i];
+    }
+    cout << test.solve() << endl;
+  }
 }
