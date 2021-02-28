@@ -50,7 +50,6 @@ struct Solution {
     do {
       int invs = 0;
       // print(inds);
-      REP(i, 4)
       REP(o, 64) {
         string ops;
         int x = o, invs = count_invs(inds) * 2;

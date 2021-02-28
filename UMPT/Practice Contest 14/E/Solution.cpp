@@ -36,37 +36,50 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-int n, m, adj[101][101];
-unordered_map<string, int> inds;
+int n, m;
+string ss[10];
 struct Solution {
-  struct compar {
-    bool operator()(const pair<ll, int>& a, const pair<ll, int>& b) const {
-      return a.first > b.first;
-    }
-  };
+  string res, curr;
+  vector<string> opts;
+  bool bad[10];
   string solve() {
-    unordered_set<int> reachable;
-    reachable.insert(n);
-    int count = 0, res = 0;
-    while (true) {
-      unordered_map<int, int> next_layer;
-      for (int i : reachable) {
-        REP(j, n + 1) {
-          int x = adj[i][j];
-          if (!reachable.count(j) && x != -1) {
-            if (!next_layer.count(j)) next_layer[j] = x;  // edge from i to j
-            next_layer[j] = min(next_layer[j], x);
+    res = "-1", curr = "", opts.clear(), opts.resize(m), memset(bad, 0, sizeof(bad));
+    REP(i, m) {  // col
+      REP(j, n) {
+        if (opts[i].find(ss[j][i]) == -1) opts[i] += ss[j][i];
+      }
+    }
+    dfs(0);
+    return res;
+  }
+  void dfs(int i) {  // bad = which strings in ss have 1 flag alr
+    if (i == m) {
+      // cout << curr << endl;
+      if (res == "-1") res = curr;
+      return;
+    }
+    bool temp[10];
+    copy(bad, bad + n, temp);
+    for (char c : opts[i]) {
+      bool flag = false;
+      REP(j, n) {
+        if (ss[j][i] != c) {
+          if (bad[j]) {
+            flag = true;
+            break;
           }
+          bad[j] = true;
         }
       }
-      if(next_layer.empty()) break;
-      for (auto p : next_layer) {
-        reachable.insert(p.first);
-        res += p.second;
+      if (flag) {
+        copy(temp, temp + n, bad);
+        continue;
       }
+      curr += c;
+      dfs(i + 1);
+      curr.pop_back();
+      copy(temp, temp + n, bad);
     }
-    if (reachable.size() < n + 1) return "Impossible";
-    return to_string(res);
   }
 };
 
@@ -74,21 +87,13 @@ int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
   Solution test;
-  cin >> n >> m;
-  string s, t;
-  int x;
-  inds.clear();
-  REP(i, n) {
-    cin >> s;
-    inds[s] = i;  // 0 ... n-1
+  int T;
+  cin >> T;
+  while (T--) {
+    cin >> n >> m;
+    REP(i, n) {
+      cin >> ss[i];
+    }
+    cout << test.solve() << endl;
   }
-  inds["English"] = n;
-  memset(adj, -1, sizeof(adj));
-  REP(i, m) {
-    cin >> s >> t;
-    cin >> x;
-    int a = inds[s], b = inds[t];
-    adj[a][b] = adj[b][a] = x;
-  }
-  cout << test.solve() << endl;
 }

@@ -36,59 +36,56 @@
 using namespace std;
 const int mod = 1e9 + 7;
 
-int n, m, adj[101][101];
-unordered_map<string, int> inds;
+int n, tree[1000005], nums[1000001];
 struct Solution {
-  struct compar {
-    bool operator()(const pair<ll, int>& a, const pair<ll, int>& b) const {
-      return a.first > b.first;
+  int solve() {
+    REPN(i, n)
+    if (count(i)) return i;
+    return 0;
+  }
+  void remove(int i) {  // remove i'th value
+    int v = get_ith(i);
+    // printf("i=%d, v=%d\n", i, v);
+    update(v, -1);
+  }
+  int get_ith(int i) {
+    int low = 1, high = n;
+    while (low <= high) {
+      int mid = (low + high) / 2;
+      if (count(mid) < i)
+        low = mid + 1;
+      else
+        high = mid - 1;
     }
-  };
-  string solve() {
-    unordered_set<int> reachable;
-    reachable.insert(n);
-    int count = 0, res = 0;
-    while (true) {
-      unordered_map<int, int> next_layer;
-      for (int i : reachable) {
-        REP(j, n + 1) {
-          int x = adj[i][j];
-          if (!reachable.count(j) && x != -1) {
-            if (!next_layer.count(j)) next_layer[j] = x;  // edge from i to j
-            next_layer[j] = min(next_layer[j], x);
-          }
-        }
-      }
-      if(next_layer.empty()) break;
-      for (auto p : next_layer) {
-        reachable.insert(p.first);
-        res += p.second;
-      }
-    }
-    if (reachable.size() < n + 1) return "Impossible";
-    return to_string(res);
+    return low;
+  }
+  void update(int v, int d) {  // d is the incoming change
+    for (int i = v; i <= n; i += (i & -i)) tree[i] += d;
+  }
+  int count(int v) {
+    int res = 0;
+    for (int i = v; i; i -= (i & -i)) res += tree[i];
+    // printf("v=%d, count=%d\n", v, res);
+    return res;
   }
 };
 
 int main() {
   ios::sync_with_stdio(false);
   cin.tie(0);
+  memset(tree, 0, sizeof(tree));
   Solution test;
-  cin >> n >> m;
-  string s, t;
-  int x;
-  inds.clear();
+  int x, T;
+  cin >> n >> T;
   REP(i, n) {
-    cin >> s;
-    inds[s] = i;  // 0 ... n-1
+    cin >> x, test.update(x, 1);
   }
-  inds["English"] = n;
-  memset(adj, -1, sizeof(adj));
-  REP(i, m) {
-    cin >> s >> t;
+  REP(i, T) {
     cin >> x;
-    int a = inds[s], b = inds[t];
-    adj[a][b] = adj[b][a] = x;
+    if (x > 0)
+      test.update(x, 1);
+    else
+      test.remove(-x);
   }
   cout << test.solve() << endl;
 }
