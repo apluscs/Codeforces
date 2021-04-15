@@ -1,0 +1,5 @@
+4
+RRLL
+
+6
+LLRLLL

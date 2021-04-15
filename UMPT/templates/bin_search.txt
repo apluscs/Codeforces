@@ -1,9 +1,0 @@
-int low = 1, high = 1e9;
-while (low <= high) {
-  int mid = (low + high) / 2;
-  if (able(mid))
-    low = mid + 1;
-  else
-    high = mid - 1;
-}
-return high;
